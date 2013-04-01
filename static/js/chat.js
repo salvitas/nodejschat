@@ -43,6 +43,7 @@ $(function() {
 		
 		$('#submit-message').click(function() {
 			sendMessage($('#message').val());
+			$('#message').val('');
 		});
 		
 		socket.on('message', function(nickname, message) {
