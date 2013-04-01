@@ -5,16 +5,20 @@ module.exports = function(io) {
 		console.log('Client connected');
 	
 		socket.on('set_nickname', function(nickname, callback) {
-			console.log('Setting nickname: ' + nickname);
+			console.log('Setting nickname: ' + nickname + '...');
 		
 			var isAvailable = isNicknameAvailable(nickname);
 			if(isAvailable) {
 				socket.nickname = nickname;
+				console.log('Setting nickname: ' + nickname + '...OK');
+				sendMessage('SERVER', 'User @' + nickname + ' has connected.');
+			} else {
+				console.log('Setting nickname: ' + nickname + '...KO');
 			}
 			
 			callback(isAvailable);
 			
-			sendMessage('SERVER', 'User @' + nickname + 'has connected.');
+			
 		}); 
 	
 		socket.on('message', function(message) {
@@ -22,7 +26,7 @@ module.exports = function(io) {
 		});
 		
 		socket.on('disconnect', function() {
-			sendMessage('SERVER', 'User @' + socket.nickname + 'has disconnected! ');
+			sendMessage('SERVER', 'User @' + socket.nickname + ' has disconnected! ');
 		});
 		
 	});

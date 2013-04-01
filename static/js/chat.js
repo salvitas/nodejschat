@@ -1,6 +1,7 @@
 $(function() {
 	var login = $('#login'),
 		chat = $('#chat'),
+		alert = $('#alert');
 		messages = $('#messages');
 	var socket = io.connect('/');
 	
@@ -11,6 +12,8 @@ $(function() {
 	});
 	
 	var init = function() {	
+		chat.hide();
+		
 		$('#nickname').keyup(function(e) {
 			var code = e.wich || e.keyCode;
 		
@@ -19,7 +22,15 @@ $(function() {
 			}
 		});
 		
-		 chat.hide();
+		$('#message').keyup(function(e) {
+			var code = e.wich || e.keyCode;
+		
+			if(code == 13) {
+				sendMessage($(this).val());
+				$(this).val('');
+			}
+		});
+		
 	}
 	
 	var setNickname = function(nickname) {
@@ -33,6 +44,7 @@ $(function() {
 					setUpChat(nickname);
 				} else {
 					console.log('Nickname ' + nickname + ' is not available!');
+					addAlert('SERVER: User @' + nickname + ' is online, use different nickname!');
 				}
 		});
 	};
@@ -56,9 +68,11 @@ $(function() {
 	};
 	
 	var addMessage = function(nickname, message) {
-		messages.append($('<li>@' + nickname +' : ' + message +'</li>'));
+		messages.append($('<li>@' + nickname +' >> ' + message +'</li>'));
 	};
 	
-	
+	var addAlert = function(message) {
+		alert.append($('<p class="alert">' + message + '</p>'));
+	};
 	
 });
