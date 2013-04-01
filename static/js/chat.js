@@ -58,8 +58,8 @@ $(function() {
 			$('#message').val('');
 		});
 		
-		socket.on('message', function(nickname, message) {
-			addMessage(nickname, message);
+		socket.on('message', function(nickname, message, color) {
+			addMessage(nickname, message, color);
 		});
 	};
 	
@@ -67,8 +67,8 @@ $(function() {
 		socket.emit('message', msg);
 	};
 	
-	var addMessage = function(nickname, message) {
-		messages.append($('<li>@' + nickname +' >> ' + message +'</li>'));
+	var addMessage = function(nickname, message, color) {
+		messages.append($('<li style="color:'+color+'">@' + nickname +' >> ' + message +'</li>'));
 	};
 	
 	var addAlert = function(message) {

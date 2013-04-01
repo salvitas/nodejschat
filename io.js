@@ -10,8 +10,9 @@ module.exports = function(io) {
 			var isAvailable = isNicknameAvailable(nickname);
 			if(isAvailable) {
 				socket.nickname = nickname;
-				console.log('Setting nickname: ' + nickname + '...OK');
-				sendMessage('SERVER', 'User @' + nickname + ' has connected.');
+				socket.color = getRndColor();
+				console.log('Setting nickname: ' + nickname + '...OK - color:' + socket.color);
+				sendMessage('SERVER', 'User @' + nickname + ' has connected.', socket.color);
 			} else {
 				console.log('Setting nickname: ' + nickname + '...KO');
 			}
@@ -22,7 +23,7 @@ module.exports = function(io) {
 		}); 
 	
 		socket.on('message', function(message) {
-			sendMessage(socket.nickname, message);
+			sendMessage(socket.nickname, message, socket.color);
 		});
 		
 		socket.on('disconnect', function() {
@@ -31,8 +32,8 @@ module.exports = function(io) {
 		
 	});
 	
-	var sendMessage = function(nickname, message) {
-		io.sockets.emit('message', nickname, message);
+	var sendMessage = function(nickname, message, color) {
+		io.sockets.emit('message', nickname, message, color);
 	};
 	
 	var isNicknameAvailable = function(nickname) {
@@ -49,4 +50,13 @@ module.exports = function(io) {
 		
 		return true;
 	};
+	
+	var getRndColor = function() {
+	    var letters = '0123456789ABCDEF'.split('');
+	    var color = '#';
+	    for (var i = 0; i < 6; i++ ) {
+	        color += letters[Math.round(Math.random() * 15)];
+	    }
+	    return color;
+	}
 }
