@@ -29,6 +29,7 @@ $(function() {
 			if(code == 13) {
 				sendMessage($(this).val());
 				$(this).val('');
+				typing.html('');
 			} else {
 				sendTyping();
 			}
