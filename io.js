@@ -26,14 +26,24 @@ module.exports = function(io) {
 			sendMessage(socket.nickname, message, socket.color);
 		});
 		
+		socket.on('is_typing', function() {
+			sendTyping(socket.nickname, "is typing...", socket.color);
+		});
+		
 		socket.on('disconnect', function() {
-			sendMessage('SERVER', 'User @' + socket.nickname + ' has disconnected! ');
+			if(socket.nickname != undefined) {
+				sendMessage('SERVER', 'User @' + socket.nickname + ' has disconnected! ');
+			}
 		});
 		
 	});
 	
 	var sendMessage = function(nickname, message, color) {
 		io.sockets.emit('message', nickname, message, color);
+	};
+	
+	var sendTyping = function(nickname, message, color) {
+		io.sockets.emit('is_typing', nickname, message, color);
 	};
 	
 	var isNicknameAvailable = function(nickname) {

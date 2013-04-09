@@ -3,6 +3,7 @@ $(function() {
 		chat = $('#chat'),
 		alert = $('#alert');
 		messages = $('#messages');
+		typing = $('#typing');
 	var socket = io.connect('/');
 	
 	socket.on('connect', function() {
@@ -28,6 +29,8 @@ $(function() {
 			if(code == 13) {
 				sendMessage($(this).val());
 				$(this).val('');
+			} else {
+				sendTyping();
 			}
 		});
 		
@@ -61,14 +64,26 @@ $(function() {
 		socket.on('message', function(nickname, message, color) {
 			addMessage(nickname, message, color);
 		});
+		
+		socket.on('is_typing', function(nickname, message, color) {
+			inserTyping(nickname, message, color);
+		});
 	};
 	
 	var sendMessage = function(msg) {
 		socket.emit('message', msg);
 	};
 	
+	var sendTyping = function(msg) {
+		socket.emit('is_typing');
+	};
+	
 	var addMessage = function(nickname, message, color) {
 		messages.append($('<li style="color:'+color+'">@' + nickname +' >> ' + message +'</li>'));
+	};
+	
+	var inserTyping = function(nickname, message, color) {
+		typing.html($('<p style="color:'+color+'">@' + nickname + ' ' + message +'</p>'));
 	};
 	
 	var addAlert = function(message) {
